@@ -239,7 +239,7 @@ The PowerShell output confirmed TLS 1.2 enforcement and successful completion of
 After restarting IIS and confirming all CyberArk services were running, I tested access by browsing to the PVWA URL over HTTPS.
 
 > **Figure 11.** Accessing the PVWA web portal over HTTPS
-> 📸 <img width="700" height="608" alt="PVWA-PostC-web-login" src="https://github.com/user-attachments/assets/fdcc7cf8-d18a-4b7a-ba3a-e90eb0701b2e" />
+> 📸 <img width="600" height="550" alt="PVWA-PostC-web-login" src="https://github.com/user-attachments/assets/fdcc7cf8-d18a-4b7a-ba3a-e90eb0701b2e" />
 
 
 The login page loaded successfully, confirming PVWA connectivity with the Vault and the correct SSL configuration.
