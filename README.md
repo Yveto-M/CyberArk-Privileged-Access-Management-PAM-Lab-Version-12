@@ -41,7 +41,7 @@ The **Primary Vault** is the foundation of the CyberArk PAM ecosystem. It secure
 5. Verified Vault startup and license status in **Server Central Administration**.
 
 📸 **Screenshots**
-| Description | Image |
+| Images| Description |
 |--------------|-------|
 
 Vault Built in User|<img width="767" height="547" alt="built-in-user-config" src="https://github.com/user-attachments/assets/7e8bfa5e-1b72-4ec7-8a39-fd67c352da85" />
