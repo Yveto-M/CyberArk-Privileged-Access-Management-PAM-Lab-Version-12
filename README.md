@@ -50,7 +50,7 @@ The installation starts with defining two critical built-in accounts: **Master**
 These accounts enforce role separation—one of CyberArk’s core security principles. Between these two, the Vault maintains both recoverability and operational stability.
 
 > **Figure 1.** Creating the built-in Master and Administrator accounts
-> 📸 <img width="750" height="750" alt="built-in-user-config" src="https://github.com/user-attachments/assets/7e8bfa5e-1b72-4ec7-8a39-fd67c352da85" />
+> 📸 <img width="750" height="600" alt="built-in-user-config" src="https://github.com/user-attachments/assets/7e8bfa5e-1b72-4ec7-8a39-fd67c352da85" />
 
 Once these credentials were set, the Vault generated its initial encryption keys and prepared the machine for hardening. At this stage, no external components (PVWA, CPM, or PSM) can connect yet—the Vault first secures its environment.
 
@@ -70,7 +70,7 @@ During this process, the installer:
 This is one of my favorite steps—it’s where you can literally watch the system secure itself.
 
 > **Figure 2.** Hardening in progress — CyberArk securing the operating system
-> 📸 <img width="750" height="750" alt="cyber-setup-hardening" src="https://github.com/user-attachments/assets/b608421d-e66c-4ea8-b4f8-3c399b3230c9" />
+> 📸 <img width="750" height="600" alt="cyber-setup-hardening" src="https://github.com/user-attachments/assets/b608421d-e66c-4ea8-b4f8-3c399b3230c9" />
 
 When the hardening completes, the Vault machine is effectively isolated and production-grade secure.
 
@@ -89,7 +89,7 @@ These include:
 At this stage, the Vault is fully operational—ready to accept connections from other CyberArk components.
 
 > **Figure 3.** Vault safes confirmed post-installation
-> 📸 <img width="750" height="750" alt="cyberArk-server-up" src="https://github.com/user-attachments/assets/c9d285d8-f71f-40b5-bdd4-d8cbb67b1ee0" />
+> 📸 <img width="750" height="600" alt="cyberArk-server-up" src="https://github.com/user-attachments/assets/c9d285d8-f71f-40b5-bdd4-d8cbb67b1ee0" />
 
 For anyone new to CyberArk, seeing these safes appear is confirmation that your Vault is alive, healthy, and successfully encrypted.
 
@@ -100,7 +100,7 @@ For anyone new to CyberArk, seeing these safes appear is confirmation that your 
 Before moving on, I validated the Vault’s services through **Server Central Administration (SCA)**. This step ensures all necessary services—Vault, PrivateArk Server, and communication listeners—are active and using the correct encryption algorithms (AES-256, RSA-2048, SHA-512).
 
 > **Figure 4.** Vault services running and communication logs active
-> 📸 <img width="750" height="750" alt="vault-setup-full-complete" src="https://github.com/user-attachments/assets/b72ab5fa-13a2-47b7-9829-f90668da1bb5" />
+> 📸 <img width="750" height="600" alt="vault-setup-full-complete" src="https://github.com/user-attachments/assets/b72ab5fa-13a2-47b7-9829-f90668da1bb5" />
 
 
 The SCA log output showed successful startup, database mount confirmation, and secure socket binding—all key indicators of a stable Vault installation.
