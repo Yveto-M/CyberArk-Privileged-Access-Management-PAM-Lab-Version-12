@@ -148,13 +148,13 @@ This phase started with building a dedicated Windows Server VM, installing IIS a
 I provisioned a new **Windows Server 2012 R2 Datacenter** virtual machine using **VMware Workstation Pro 17**. The PVWA server was given a static IP and configured to sit within the same internal network as the Vault (to allow controlled communication over TCP port 1858).
 
 > **Figure 1.** Creating a new Windows Server 2012 R2 VM for PVWA
-> 📸 <img width="524" height="516" alt="VM-For-PVWA" src="https://github.com/user-attachments/assets/e47d90a2-e371-423d-ba94-c7534ddf5454" />
+> 📸 <img width="450" height="450" alt="VM-For-PVWA" src="https://github.com/user-attachments/assets/e47d90a2-e371-423d-ba94-c7534ddf5454" />
 
 
 Once the virtual machine was created, I performed initial OS setup — product key activation, account creation, and system configuration.
 
 > **Figure 2.** Windows Server setup and personalization during VM creation
-> 📸 <img width="474" height="509" alt="pvwa-win12-product-code" src="https://github.com/user-attachments/assets/4766c7ac-9465-4cdf-aa52-f8a23ab8dc01" />
+> 📸 <img width="400" height="400" alt="pvwa-win12-product-code" src="https://github.com/user-attachments/assets/4766c7ac-9465-4cdf-aa52-f8a23ab8dc01" />
 
 
 With the base OS ready, I installed all available Windows updates, assigned the appropriate hostname, and verified network connectivity to the Vault server.
