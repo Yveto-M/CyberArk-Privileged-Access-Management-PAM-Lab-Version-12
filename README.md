@@ -26,34 +26,122 @@ This project demonstrates a full end-to-end deployment of CyberArk PAM version 1
 All machines were hosted in a virtual lab (VMware Workstation) with isolated internal networking for security testing.
 
 ---
-
 ## ⚙️ Implementation Highlights
 
-- **Vault & DR Vault Configuration**
-  - Installed PrivateArk Server 12.x on separate VMs.
-  - Configured PADR (PrivateArk Disaster Recovery) replication with encrypted channels and heartbeat validation.
-  - Verified replication integrity via Server Central Administration logs.
+---
 
-- **PVWA + CPM Integration**
-  - Deployed IIS-based PVWA portal and linked to the primary vault.
-  - Configured Central Policy Manager to automatically rotate and reconcile privileged local-admin passwords.
+### 🔐 Primary Vault Configuration
+The **Primary Vault** is the foundation of the CyberArk PAM ecosystem. It securely stores all privileged credentials, encryption keys, and audit logs in an encrypted database.
 
-- **PSM Deployment**
-  - Installed Remote Desktop Session Host role.
-  - Registered PSM with PVWA; validated connectivity and session management status.
-  - Implemented secure RDP session launching (via `PSM-RDP` connection component) to prevent credential exposure.
+**Key Steps**
+1. Installed **CyberArk PrivateArk Server 12.x** on a dedicated Windows Server VM.  
+2. Configured the Vault to operate in standalone mode with strict firewall rules.  
+3. Applied CyberArk hardening baselines (disabled unused ports, enforced TLS 1.2).  
+4. Created safes for PVWA, CPM, and PSM integration.  
+5. Verified Vault startup and license status in **Server Central Administration**.
 
-- **Active Directory Integration**
-  - Joined PSM and management servers to the AD domain.
-  - Created OU structure and Group Policies for hardened RDP access.
-  - Enabled auditing and event forwarding to Splunk for monitoring.
-
-- **Security Hardening**
-  - Applied CyberArk baseline hardening scripts.
-  - Enforced TLS 1.2, disabled LM/NTLMv1, and limited local admin privileges.
-  - Enabled Vault audit logging and dual-control workflow for privileged account access.
+📸 **Screenshots**
+| Description | Image |
+|--------------|-------|
+| Vault Service Startup | ![Vault Startup](path/to/vault_startup.png) |
+| Server Central Administration – Vault Online | ![Vault Online](path/to/vault_online.png) |
+| Safe Creation | ![Safe Creation](path/to/safe_creation.png) |
 
 ---
+
+### 🌐 Password Vault Web Access (PVWA) Configuration
+Deployed the **PVWA** portal, providing a secure web interface for administrators to access credentials and launch privileged sessions.
+
+**Key Steps**
+1. Installed **IIS** and **PVWA 12.x** on a Windows Server.  
+2. Linked PVWA to the **Primary Vault** using CyberArk Application Identity credentials.  
+3. Verified authentication and certificate trust between PVWA and the Vault.  
+4. Configured authentication policies and administrator roles.  
+5. Confirmed connectivity under **Administration → Components → PSM Servers**.
+
+📸 **Screenshots**
+| Description | Image |
+|--------------|-------|
+| PVWA Login Page | ![PVWA Login](path/to/pvwa_login.png) |
+| PVWA Configuration File | ![PVWA Config](path/to/pvwa_config.png) |
+| Component Status – Connected | ![PVWA Components](path/to/pvwa_components.png) |
+
+---
+
+### 🔄 Central Policy Manager (CPM) Configuration
+Implemented the **Central Policy Manager** (CPM) to automate password rotation, verification, and reconciliation of privileged accounts.
+
+**Key Steps**
+1. Installed CPM on a separate Windows Server linked to the Primary Vault.  
+2. Configured CPM communication parameters and created CPM safes.  
+3. Registered CPM in PVWA for policy automation.  
+4. Tested password change and verification jobs successfully.  
+5. Validated CPM logs for rotation success.
+
+📸 **Screenshots**
+| Description | Image |
+|--------------|-------|
+| CPM Service Running | ![CPM Service](path/to/cpm_service.png) |
+| Policy Configuration in PVWA | ![CPM Policy](path/to/cpm_policy.png) |
+| Password Rotation Log | ![Rotation Log](path/to/rotation_log.png) |
+
+---
+
+### 🧩 Active Directory Domain Integration
+Integrated **Active Directory (AD)** for centralized authentication and group policy enforcement across CyberArk servers.
+
+**Key Steps**
+1. Installed and configured **Active Directory Domain Services (AD DS)** on Windows Server.  
+2. Created Organizational Units (OUs) for CyberArk components.  
+3. Joined PVWA, CPM, and PSM servers to the AD domain.  
+4. Applied Group Policy Objects (GPOs) for RDP restrictions and password complexity.  
+5. Enabled auditing and event forwarding for security monitoring.
+
+📸 **Screenshots**
+| Description | Image |
+|--------------|-------|
+| AD OU Structure | ![AD OU](path/to/ad_ou.png) |
+| Group Policy Settings | ![GPO](path/to/gpo.png) |
+| Event Forwarding | ![Event Forwarding](path/to/event_forwarding.png) |
+
+---
+
+### 🖥️ Privileged Session Manager (PSM) Configuration
+Deployed and joined **PSM** to the AD domain to enable isolated, credential-less RDP sessions for administrators.
+
+**Key Steps**
+1. Installed **Remote Desktop Session Host (RDS)** role on the PSM server.  
+2. Registered PSM with PVWA using **PSMAdminConnect** credentials.  
+3. Confirmed **Session Management status = Connected** in PVWA.  
+4. Deployed the **PSM-RDP Connection Component** to enable secure RDP launch via PVWA.  
+5. Validated successful RDP sessions without exposing credentials.
+
+📸 **Screenshots**
+| Description | Image |
+|--------------|-------|
+| PSM Service Running | ![PSM Service](path/to/psm_service.png) |
+| PSM Registered in PVWA | ![PSM Registered](path/to/psm_registered.png) |
+| RDP Session via Connect Button | ![PSM RDP](path/to/psm_rdp.png) |
+
+---
+
+### 🪞 Disaster Recovery (DR) Vault Configuration
+Configured a **DR Vault** to provide redundancy and business continuity through real-time replication of the Primary Vault.
+
+**Key Steps**
+1. Installed **CyberArk DR Vault 12.x** on a separate Windows Server VM.  
+2. Copied configuration files (`dbparm.ini`, license, and Vault keys) from the Primary Vault.  
+3. Configured **PADR replication** between the two Vaults using dedicated replication users.  
+4. Verified connectivity and encryption keys in `padr.ini`.  
+5. Confirmed successful replication in **Server Central Administration** logs.
+
+📸 **Screenshots**
+| Description | Image |
+|--------------|-------|
+| DR Vault Setup Wizard | ![DR Vault Setup](path/to/dr_vault_setup.png) |
+| PADR Configuration Utility | ![PADR Config](path/to/padr_config.png) |
+| Replication Sync Log | ![DR Replication](path/to/dr_replication.png) |
+
 
 ## 🔍 Key Learnings
 
