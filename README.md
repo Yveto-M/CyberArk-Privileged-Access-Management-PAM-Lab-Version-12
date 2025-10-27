@@ -397,16 +397,147 @@ In the Vault, I confirmed the creation of new CPM safes (cpm-old versions, PassM
 
 ---
 
+## **Phase 4 – Active Directory Integration & Privileged Session Manager Deployment**
+
+With the Vault, PVWA, and CPM successfully operational, the next milestone was integrating **Active Directory (ArkLabs.com)** and deploying **CyberArk Privileged Session Manager (PSM)**.
+PSM provides secure session brokering—enforcing isolation, monitoring, and recording of privileged access to servers and applications.
+For this lab, PSM was installed on the **same subnet (10.1.1.x/24)** as the other CyberArk components, with DNS manually configured to resolve the new **ArkLabs.com** domain controller.
+
+---
+
+### **Step 1 – Network Preparation and Domain Join**
+
+The PSM virtual machine was configured with a static IP (10.1.1.3) and DNS pointed to the AD controller.
+After validating connectivity, the server was joined to the **ArkLabs.com** domain.
+
+📸 **Screenshots:**
+<img width="418" height="461" alt="psm-to-ad-dns-1" src="https://github.com/user-attachments/assets/b6d6d1ed-3afa-4d37-bf22-65bf11ff1e4a" />
+
+ <img width="420" height="472" alt="Psm-domain-config-2" src="https://github.com/user-attachments/assets/8dc4cdef-81f7-4b54-88c8-abaf25ad0c79" />
+
+ <img width="442" height="515" alt="psm-domain-join-successful" src="https://github.com/user-attachments/assets/2c18de8c-2b79-4b51-b90b-de4d9c278625" />
+
+
+This step ensured PSM could authenticate users through domain-based Kerberos and resolve hostnames for downstream session targets.
+
+---
+
+### **Step 2 – PSM Installation and Prerequisite Checks**
+
+Using the **CyberArk Privileged Session Manager v12 installer**, the process began with PowerShell automation verifying .NET Framework and Remote Desktop Services (RDS) components.
+
+📸 **Screenshots:**
+
+<img width="729" height="555" alt="PSM-ini-intallation-part-1" src="https://github.com/user-attachments/assets/ee8d95f5-76c3-49f8-adc7-36e15aa9c377" />
+
+<img width="868" height="303" alt="psm-rds-intallment" src="https://github.com/user-attachments/assets/9292e8e2-5568-471d-9949-c6c44b2c23fc" />
+
+<img width="873" height="351" alt="RDS-Complete " src="https://github.com/user-attachments/assets/8fe86d48-7c1e-47c8-bc47-6454037e06e0" />
+
+
+PowerShell confirmed prerequisite success for `VerifyDotNet`, `InstallRDS`, and `DisableNLA`.
+The server was then restarted under a domain-admin account to finalize RDS integration.
+
+---
+
+### **Step 3 – Vault Connectivity and Registration**
+
+During setup, PSM was registered to the Vault using secure TLS (Port 1858).
+Administrator credentials from the Vault were supplied to establish trust and update the environment configuration.
+
+📸 **Screenshots:**
+
+<img width="709" height="344" alt="PSM-vault-IP-connect-part-2" src="https://github.com/user-attachments/assets/43b4078d-a7c8-48d7-9b47-fe2c64f30381" />
+
+<img width="710" height="351" alt="PSM-vault-admin-pass-part-3" src="https://github.com/user-attachments/assets/0cdf3284-d572-417f-8317-4391e7b443dd" />
+
+<img width="1007" height="484" alt="psm-to-vault-complete and successfull" src="https://github.com/user-attachments/assets/61253a34-83e7-4dcc-bd66-6569e44fbcf0" />
+
+
+This connection allows the Vault to manage PSM policies and authorize session requests originating through PVWA.
+
+---
+
+### **Step 4 – API Gateway and Certificate Configuration**
+
+Next, the installer prompted for the **PVWA API Gateway** connection—secured over HTTPS (port 443).
+A self-signed certificate was generated and imported into the local machine store to encrypt communications between PVWA and PSM.
+
+📸 **Screenshots:**
+ 
+<img width="711" height="369" alt="PSM-APIGateway-to-PVWA-part-4" src="https://github.com/user-attachments/assets/05fc78f8-7f46-4023-9a6f-1abf1112c8ce" />
+
+<img width="713" height="350" alt="PSM-PKI-Autho(certificate for ID)-part-5" src="https://github.com/user-attachments/assets/d2ed5a20-33b0-4b37-a25e-d8754c9c39d8" />
+
+<img width="709" height="336" alt="PSM-Hardening-Skipnow-part-6" src="https://github.com/user-attachments/assets/86ee8bf7-7fea-4bdf-912c-b0e8c228c5d5" />
+
+Although hardening can be automated, it was skipped temporarily to validate functionality before applying advanced security baselines.
+
+---
+
+### **Step 5 – Installation Completion and System Validation**
+
+Installation completed successfully, followed by a reboot.
+After the restart, Windows Services confirmed all PSM components were active and integrated with domain credentials.
+
+📸 <img width="706" height="347" alt="PSM-installment-Complete" src="https://github.com/user-attachments/assets/34402639-e78a-40a0-9604-074e4581e0bc" />
+
+Finally, system health in PVWA confirmed **1 connected PSM instance**, verifying full integration with the CyberArk Vault and API Gateway.
+
+📸 **Screenshot:** System Health Dashboard (`App User Instances – 1 Connected`)
+
+---
+
+### **Key Takeaways**
+
+* PSM acts as the **secure gateway** for all privileged sessions, enforcing isolation between administrators and target machines.
+* Integrating PSM with Active Directory and PVWA via HTTPS ensures traceability, auditing, and least-privilege access control.
+* DNS and network configuration were critical—joining the PSM to ArkLabs.com enabled proper Kerberos authentication and RDP policy enforcement.
+* The final PVWA health panel confirmed an end-to-end CyberArk stack: Vault → PVWA → CPM → PSM.
+
+---
+
+## **CyberArk v12 Architecture Overview**
+
+Below is a text-based layout summarizing the entire build:
+
+```
+[Primary Vault Server]  (10.1.1.1)
+│
+├── [PVWA + CPM Server]  (10.1.1.2)
+│     ├─ Hosts Password Vault Web Access (HTTPS)
+│     ├─ Runs Central Policy Manager for credential rotation
+│     └─ Integrated with the Vault via port 1858
+│
+├── [Active Directory Domain Controller]  (10.1.1.X)
+│     └─ Domain: ArkLabs.com – manages domain users, DNS, Kerberos
+│
+├── [PSM Server]  (10.1.1.3)
+│     ├─ Joined to ArkLabs.com
+│     ├─ Connected to PVWA API Gateway via HTTPS (port 443)
+│     ├─ Handles RDP/SSH session isolation
+│     └─ Reports health to PVWA dashboard
+│
+└── [Disaster Recovery Vault]  (to be configured next)
+      └─ Replicates Vault data for high availability and business continuity
+```
+
+This configuration demonstrates a complete **end-to-end CyberArk Privileged Access Security ecosystem** deployed in a controlled lab environment—each component secured, networked, and validated through TLS communication and domain integration.
+
+---
+
+✅ **Next Phase:** *Disaster Recovery Vault Configuration & Synchronization* — to establish data redundancy between the Production Vault and the DR site.
+
+---
 
 
 ## 🧰 Tools & Technologies
 
 - **CyberArk PAM v12** (Vault, PVWA, CPM, PSM)
-- **Windows Server 2022**
+- **Windows Server 2012 Datacenter**
 - **Active Directory Domain Services**
 - **VirtualBox Lab Environment**
 - **PowerShell / CLI**
-- **Splunk Enterprise (Logging & Monitoring)**
 
 ---
 
