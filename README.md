@@ -43,6 +43,7 @@ The **Primary Vault** is the foundation of the CyberArk PAM ecosystem. It secure
 📸 **Screenshots**
 | Images| Description |
 |--------------|-------|
+
 <img width="767" height="547" alt="built-in-user-config" src="https://github.com/user-attachments/assets/7e8bfa5e-1b72-4ec7-8a39-fd67c352da85" />**Vault Built in User** 
 
 <img width="562" height="441" alt="cyber-setup-hardening" src="https://github.com/user-attachments/assets/b608421d-e66c-4ea8-b4f8-3c399b3230c9" />**Vault Hardening**
