@@ -256,6 +256,147 @@ The login page loaded successfully, confirming PVWA connectivity with the Vault 
 
 ---
 
+## ⚙️ Phase 3 — Deploying and Integrating the CyberArk Central Policy Manager (CPM)
+
+### Overview
+
+The **Central Policy Manager (CPM)** is the engine that automates password rotation, verification, and reconciliation across all managed systems. While enterprise deployments host CPM on a dedicated server, in this lab I co-hosted CPM with **PVWA** to streamline resource use and focus on integration behavior.
+
+This phase covers the full lifecycle: installing CPM, securing communication with the Vault, creating self-signed certificates, resolving SSL validation errors, completing hardening, and verifying automation through a functional “VetoLabs” safe.
+
+---
+
+### Step 1 — Launching the CPM Installer
+
+After preparing the PVWA server, I extracted the **CPM v12.0 installer** and ran the setup executable as Administrator.
+
+> **Figure 1.** Running the CPM installer with elevated privileges
+> 📸 <img width="789" height="345" alt="cpm-ini-install-run-as-admin" src="https://github.com/user-attachments/assets/3949efcd-0f2d-4a77-835b-92e8a7b262ae" />
+
+The installer confirmed required prerequisites (.NET, IIS components, Vault connectivity) and began configuration.
+
+---
+
+### Step 2 — Vault Integration Credentials
+
+The setup prompted for the **Vault Administrator credentials** so CPM could register itself with the Vault and receive its encryption keys.
+
+> **Figure 2.** Entering Vault Administrator credentials during CPM setup
+> 📸 <img width="538" height="408" alt="cpm-set-up-admin-creden-1" src="https://github.com/user-attachments/assets/31a4df14-978c-4ea7-9810-cb8e8fbc649e" />
+
+This registration step binds CPM’s internal “PasswordManagerUser” to the Vault, enabling policy-based password management.
+
+---
+
+### Step 3 — Creating and Installing SSL Certificates
+
+To establish mutual trust between components, I created a **self-signed certificate** for the CPM server and imported the PVWA SSL certificate into its Trusted Root store.
+
+> **Figure 3.** Generating a self-signed certificate for CPM
+> 📸 <img width="683" height="331" alt="creating-ssCERT-4" src="https://github.com/user-attachments/assets/74e412a7-59c1-4049-8f3a-1d677bc19dd9" />
+
+> **Figure 4.** Exporting the certificate for reuse
+> 📸 <img width="551" height="259" alt="EXPORT-CERT-5" src="https://github.com/user-attachments/assets/b413a593-0ebd-417f-935d-5b653f5b1dd9" />
+
+> **Figure 5.** Importing PVWA SSL certificate to local machine
+> 📸 <img width="804" height="192" alt="SSL-cert-cpm" src="https://github.com/user-attachments/assets/0e05b99c-e4f0-48b2-9889-ade4a7fa9eb5" />
+
+> **Figure 6.** Placing the certificate into Trusted Root store
+> 📸 <img width="967" height="239" alt="Importing-SSL-Cert-to-trusted root" src="https://github.com/user-attachments/assets/3a8d6c01-78e2-4138-848a-29de067f2d4d" />
+
+
+Proper certificate placement ensures encrypted Vault-to-CPM communication and prevents the common “Untrusted Root” SSL chain error.
+
+---
+
+### Step 4 — Resolving SSL and Service Issues
+
+During first startup, the **CPM Scanner service** threw an SSL validation error (`UntrustedRoot`). I traced it to an incomplete certificate chain using the `CACPMScanner.log`.
+
+> **Figure 7.** SSL validation error detected in Scanner log
+> 📸 <img width="776" height="336" alt="Tshoot-scanner-SSL-ERROR" src="https://github.com/user-attachments/assets/972f1116-005f-4b7e-9be3-c6db31cbaed7" />
+
+
+After importing the certificate into the correct store and restarting the service, the error cleared and all CPM services reached the **Running** state.
+
+> **Figure 8.** All CPM services running under PasswordManagerUser
+> 📸 <img width="640" height="142" alt="cpm-scanning-comp-running-9" src="https://github.com/user-attachments/assets/7418d9da-89c8-438f-996c-154ffb4864bd" />
+
+
+This fix highlights the importance of validating certificate trust paths in CyberArk’s distributed architecture.
+
+---
+
+### Step 5 — Hardening and Vault File Validation
+
+Next, I executed the **CPM Hardening PowerShell script**, which enforces local policy lockdowns, restricts folder permissions, and disables non-essential services.
+
+> **Figure 9.** Hardening script execution confirmation
+> 📸 <img width="827" height="121" alt="proof-fo-harnening-success" src="https://github.com/user-attachments/assets/cccdfb08-e57b-4a05-86a4-07661b3f6d6e" />
+
+
+I also replaced the local `Vault.ini` with the updated version from the Vault server to ensure proper API key alignment.
+
+> **Figure 10.** Replacing Vault INI file to sync API keys
+> 📸 <img width="803" height="386" alt="replace-vault-api-keys" src="https://github.com/user-attachments/assets/13a8452f-3fb5-4389-a39a-f3714fffc6b3" />
+
+
+With this, the CPM instance became fully authorized to interact with the Vault.
+
+---
+
+### Step 6 — Certificate Verification and Trusted Communication
+
+Finally, I verified that CPM’s self-signed certificate was live in production and bound correctly to the HTTPS listener.
+
+> **Figure 11.** Certificate successfully bound to CPM listener
+> 📸 <img width="692" height="291" alt="SS-cert-inproduction" src="https://github.com/user-attachments/assets/ea623edd-1aff-4b29-a42d-f5a0bf803397" />
+
+> **Figure 12.** Confirming SSL binding configuration
+> 📸 <img width="588" height="470" alt="SSL-on-CPM-Installation" src="https://github.com/user-attachments/assets/e51de4ca-11cb-4a5f-b197-56188f0ec790" />
+
+
+This completed the secure channel setup, ensuring every password operation between CPM and Vault travels through TLS 1.2 encryption.
+
+---
+
+### Step 7 — Safe Creation and Policy Assignment
+
+Using PVWA, I created a new safe named **VetoLabs** and assigned **PassManagerPro** as its responsible CPM.
+
+> **Figure 13.** Creating the “VetoLabs” safe and assigning to CPM
+> 📸 <img width="716" height="364" alt="Adding-safe-toCPM-10" src="https://github.com/user-attachments/assets/d02aff2d-5dfc-4a4d-b0a2-41669cb14be7" />
+
+
+Within minutes, CPM detected the new safe, initiated account verification, and scheduled rotations per policy.
+
+---
+
+### Step 8 — Account Onboarding and Verification
+
+To test CPM automation, I onboarded a local Windows Server account under the VetoLabs safe.
+
+> **Figure 14.** Account successfully onboarded and verified by CPM
+> 📸 <img width="897" height="415" alt="cpm-account-onboard-verified-11" src="https://github.com/user-attachments/assets/a20dcbc8-7ab4-4af6-ad49-69473d790eb0" />
+
+
+In the Vault, I confirmed the creation of new CPM safes (cpm-old versions, PassManagerPro safe, etc.), showing that the Vault–PVWA–CPM integration was working end-to-end.
+
+> **Figure 15.** Updated Vault safes list reflecting CPM registration
+> 📸 <img width="1021" height="352" alt="cpm-complete" src="https://github.com/user-attachments/assets/7a627ed5-bcc6-4f67-9eae-0d09d4031d1e" />
+
+
+---
+
+### Key Takeaways
+
+💡 **Automation Achieved:** CPM successfully rotates and manages credentials stored in the Vault through policy enforcement.
+💡 **Hands-on Troubleshooting:** Resolved real-world SSL and service startup issues, strengthening understanding of CyberArk infrastructure dependencies.
+💡 **Security Best Practices:** Executed CPM hardening and TLS certificate management to ensure secure machine-to-machine communication.
+💡 **Integration Fluency:** Demonstrated end-to-end connectivity between Vault, PVWA, and CPM within a co-hosted lab environment.
+
+---
+
 
 
 ## 🧰 Tools & Technologies
