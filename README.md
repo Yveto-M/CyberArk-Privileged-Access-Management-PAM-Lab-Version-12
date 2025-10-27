@@ -28,14 +28,6 @@ All machines were hosted in a virtual lab (VMware Workstation) with isolated int
 ---
 ## ⚙️ Implementation Highlights
 
-Perfect — I’ll revise your **Production Vault section** to:
-
-1. Keep the same engaging blog-meets-portfolio tone.
-2. Add smooth explanations *between* screenshots (so it reads like a full story without showing every click).
-3. Include clearly labeled **screenshot placeholders** where you can just paste images later (with markdown paths).
-
-Here’s your updated version 👇
-
 ---
 
 ## 🧱 Phase 1 — Building the CyberArk Production Vault
@@ -58,7 +50,7 @@ The installation starts with defining two critical built-in accounts: **Master**
 These accounts enforce role separation—one of CyberArk’s core security principles. Between these two, the Vault maintains both recoverability and operational stability.
 
 > **Figure 1.** Creating the built-in Master and Administrator accounts
-> 📸 *Paste screenshot here:* `./screenshots/built-in-user-config.png`
+> 📸 *<img width="750" height="750" alt="built-in-user-config" src="https://github.com/user-attachments/assets/7e8bfa5e-1b72-4ec7-8a39-fd67c352da85" />
 
 Once these credentials were set, the Vault generated its initial encryption keys and prepared the machine for hardening. At this stage, no external components (PVWA, CPM, or PSM) can connect yet—the Vault first secures its environment.
 
