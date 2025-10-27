@@ -484,7 +484,7 @@ After the restart, Windows Services confirmed all PSM components were active and
 
 Finally, system health in PVWA confirmed **1 connected PSM instance**, verifying full integration with the CyberArk Vault and API Gateway.
 
-📸 **Screenshot:** System Health Dashboard (`App User Instances – 1 Connected`)
+📸 **Screenshot: <img width="1007" height="484" alt="psm-to-vault-complete and successfull" src="https://github.com/user-attachments/assets/61253a34-83e7-4dcc-bd66-6569e44fbcf0" />
 
 ---
 
