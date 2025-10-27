@@ -44,13 +44,13 @@ The **Primary Vault** is the foundation of the CyberArk PAM ecosystem. It secure
 | Images| Description |
 |--------------|-------|
 
-<img width="767" height="547" alt="built-in-user-config" src="https://github.com/user-attachments/assets/7e8bfa5e-1b72-4ec7-8a39-fd67c352da85" />**Vault Built in User** 
+<img width="500" height="500" alt="built-in-user-config" src="https://github.com/user-attachments/assets/7e8bfa5e-1b72-4ec7-8a39-fd67c352da85" />**Vault Built in User** 
 
-<img width="562" height="441" alt="cyber-setup-hardening" src="https://github.com/user-attachments/assets/b608421d-e66c-4ea8-b4f8-3c399b3230c9" />**Vault Hardening**
+<img width="500" height="500" alt="cyber-setup-hardening" src="https://github.com/user-attachments/assets/b608421d-e66c-4ea8-b4f8-3c399b3230c9" />**Vault Hardening**
 
-<img width="1018" height="250" alt="vault-setup-full-complete" src="https://github.com/user-attachments/assets/b72ab5fa-13a2-47b7-9829-f90668da1bb5" />**Safe Creation**
+<img width="500" height="250" alt="vault-setup-full-complete" src="https://github.com/user-attachments/assets/b72ab5fa-13a2-47b7-9829-f90668da1bb5" />**Safe Creation**
 
-<img width="1023" height="344" alt="cyberArk-server-up" src="https://github.com/user-attachments/assets/c9d285d8-f71f-40b5-bdd4-d8cbb67b1ee0" />**Vault Service Startup**
+<img width="500" height="500" alt="cyberArk-server-up" src="https://github.com/user-attachments/assets/c9d285d8-f71f-40b5-bdd4-d8cbb67b1ee0" />**Vault Service Startup**
 
 ---
 
