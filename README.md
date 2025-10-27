@@ -54,7 +54,6 @@ The **Primary Vault** is the foundation of the CyberArk PAM ecosystem. It secure
 
  |Vault Service Startup|
  |<img width="1023" height="344" alt="cyberArk-server-up" src="https://github.com/user-attachments/assets/c9d285d8-f71f-40b5-bdd4-d8cbb67b1ee0" />|
-
 ---
 
 ### 🌐 Password Vault Web Access (PVWA) Configuration
