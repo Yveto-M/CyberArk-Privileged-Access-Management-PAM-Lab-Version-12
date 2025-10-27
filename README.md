@@ -391,7 +391,7 @@ In the Vault, I confirmed the creation of new CPM safes (cpm-old versions, PassM
 ### Key Takeaways
 
 💡 **Automation Achieved:** CPM successfully rotates and manages credentials stored in the Vault through policy enforcement.
-💡 **Hands-on Troubleshooting:** Resolved real-world SSL and service startup issues, strengthening understanding of CyberArk infrastructure dependencies.
+💡 **Hands-on Troubleshooting:** Resolved SSL and service startup issues, strengthening understanding of CyberArk infrastructure dependencies.
 💡 **Security Best Practices:** Executed CPM hardening and TLS certificate management to ensure secure machine-to-machine communication.
 💡 **Integration Fluency:** Demonstrated end-to-end connectivity between Vault, PVWA, and CPM within a co-hosted lab environment.
 
