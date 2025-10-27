@@ -177,7 +177,7 @@ Through **Server Manager → Add Roles and Features**, I installed the required 
 After installation, I opened the IIS Manager to confirm the **Default Web Site** was created and bound to both HTTP (port 80) and HTTPS (port 443).
 
 > **Figure 4.** IIS web site bindings showing HTTP and HTTPS configuration
-> 📸 <img width="902" height="296" alt="Binding-SSL" src="https://github.com/user-attachments/assets/4ec865b3-8680-4918-af87-db59fbc5e5e9" />
+> 📸 <img width="700" height="296" alt="Binding-SSL" src="https://github.com/user-attachments/assets/4ec865b3-8680-4918-af87-db59fbc5e5e9" />
 
 
 ---
@@ -225,9 +225,9 @@ After installation, I executed the **PVWA Hardening PowerShell scripts** provide
 * Harden system services for PVWA
 
 > **Figure 10.** PVWA prerequisites and hardening scripts executing
-> 📸 <img width="874" height="323" alt="IIS-server-Installed" src="https://github.com/user-attachments/assets/a4fe7496-1c26-4d99-89ac-f11eb6fe568a" />
+> 📸 <img width="700" height="323" alt="IIS-server-Installed" src="https://github.com/user-attachments/assets/a4fe7496-1c26-4d99-89ac-f11eb6fe568a" />
 
-> 📸 <img width="852" height="398" alt="PVWA-hardening" src="https://github.com/user-attachments/assets/4af06788-040f-4b00-9b2b-48d09962423c" />
+> 📸 <img width="700" height="398" alt="PVWA-hardening" src="https://github.com/user-attachments/assets/4af06788-040f-4b00-9b2b-48d09962423c" />
 
 
 The PowerShell output confirmed TLS 1.2 enforcement and successful completion of the PVWA hardening process.
@@ -239,7 +239,7 @@ The PowerShell output confirmed TLS 1.2 enforcement and successful completion of
 After restarting IIS and confirming all CyberArk services were running, I tested access by browsing to the PVWA URL over HTTPS.
 
 > **Figure 11.** Accessing the PVWA web portal over HTTPS
-> 📸 <img width="812" height="608" alt="PVWA-PostC-web-login" src="https://github.com/user-attachments/assets/fdcc7cf8-d18a-4b7a-ba3a-e90eb0701b2e" />
+> 📸 <img width="700" height="608" alt="PVWA-PostC-web-login" src="https://github.com/user-attachments/assets/fdcc7cf8-d18a-4b7a-ba3a-e90eb0701b2e" />
 
 
 The login page loaded successfully, confirming PVWA connectivity with the Vault and the correct SSL configuration.
