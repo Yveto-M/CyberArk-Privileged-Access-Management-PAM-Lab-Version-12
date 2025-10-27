@@ -172,12 +172,12 @@ Through **Server Manager → Add Roles and Features**, I installed the required 
 * Web Server (IIS) → Common HTTP Features (Default Document, Static Content, Directory Browsing, HTTP Errors)
 
 > **Figure 3.** Installing IIS and related roles
-> 📸 <img width="650" height="500" alt="pre-req-install-roles-for-pvwa" src="https://github.com/user-attachments/assets/2625a1e2-4934-4e57-bcb5-d9c49be16800" />
+> 📸 <img width="500" height="500" alt="pre-req-install-roles-for-pvwa" src="https://github.com/user-attachments/assets/2625a1e2-4934-4e57-bcb5-d9c49be16800" />
 
 After installation, I opened the IIS Manager to confirm the **Default Web Site** was created and bound to both HTTP (port 80) and HTTPS (port 443).
 
 > **Figure 4.** IIS web site bindings showing HTTP and HTTPS configuration
-> 📸 <img width="600" height="350" alt="Binding-SSL" src="https://github.com/user-attachments/assets/4ec865b3-8680-4918-af87-db59fbc5e5e9" />
+> 📸 <img width="450" height="350" alt="Binding-SSL" src="https://github.com/user-attachments/assets/4ec865b3-8680-4918-af87-db59fbc5e5e9" />
 
 
 ---
