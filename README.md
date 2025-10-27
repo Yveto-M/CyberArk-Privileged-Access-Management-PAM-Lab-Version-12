@@ -177,7 +177,7 @@ Through **Server Manager → Add Roles and Features**, I installed the required 
 After installation, I opened the IIS Manager to confirm the **Default Web Site** was created and bound to both HTTP (port 80) and HTTPS (port 443).
 
 > **Figure 4.** IIS web site bindings showing HTTP and HTTPS configuration
-> 📸 <img width="450" height="350" alt="Binding-SSL" src="https://github.com/user-attachments/assets/4ec865b3-8680-4918-af87-db59fbc5e5e9" />
+> 📸 <img width="600" height="400" alt="Binding-SSL" src="https://github.com/user-attachments/assets/4ec865b3-8680-4918-af87-db59fbc5e5e9" />
 
 
 ---
