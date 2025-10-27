@@ -552,11 +552,5 @@ This configuration demonstrates a complete **end-to-end CyberArk Privileged Acce
 
 ---
 
-## 🚀 Next Steps
-
-- Add **session recording and live monitoring** to PSM.
-- Automate **Vault health checks and PADR verification** with PowerShell.
-- Integrate **SIEM correlation** for privileged-session alerts.
-- Expand the lab to include **CyberArk Credential Provider** and **Cloud Entitlements Manager**.
 
 ---
