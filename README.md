@@ -28,105 +28,113 @@ All machines were hosted in a virtual lab (VMware Workstation) with isolated int
 ---
 ## ⚙️ Implementation Highlights
 
+Perfect — I’ll revise your **Production Vault section** to:
+
+1. Keep the same engaging blog-meets-portfolio tone.
+2. Add smooth explanations *between* screenshots (so it reads like a full story without showing every click).
+3. Include clearly labeled **screenshot placeholders** where you can just paste images later (with markdown paths).
+
+Here’s your updated version 👇
+
 ---
 
-### 🔐 Primary Vault Configuration
-The **Primary Vault** is the foundation of the CyberArk PAM ecosystem. It securely stores all privileged credentials, encryption keys, and audit logs in an encrypted database.
-
----
-
-## 🧱 Phase 1 — CyberArk Production Vault (Primary)
+## 🧱 Phase 1 — Building the CyberArk Production Vault
 
 ### Overview
 
-The **CyberArk Digital Vault** is the core of the PAM architecture — the secure repository that stores all privileged credentials, encryption keys, and audit data. In this phase, I deployed and hardened the **Primary Vault**, which serves as the system of record for all subsequent CyberArk components (PVWA, CPM, PSM, and DR Vault).
+The **CyberArk Digital Vault** is the beating heart of any PAM deployment. Every other component—PVWA, CPM, PSM, and the DR Vault—depends on it. In this phase, I focused on deploying and hardening the **Primary Vault**, ensuring it was production-ready, fully isolated, and compliant with CyberArk’s hardening guidelines.
 
-This setup demonstrates end-to-end understanding of CyberArk’s PAM foundation: system hardening, access isolation, operator key handling, and secure component registration flow.
-
----
-
-### Step 1: Setting Built-In User Passwords
-
-The Vault installer first prompts for creation of two critical built-in accounts — **Master** and **Administrator**.
-
-* The **Master user** acts as the break-glass account for full recovery access.
-* The **Administrator user** handles day-to-day Vault maintenance tasks.
-
-Both are created with strong, unique passwords as part of the Vault initialization sequence.
-
-> **Figure 1.** Setting built-in Master and Administrator account passwords during initial Vault setup
-> ![Vault built-in user setup](./screenshots/built-in-user-config.png)
-
-This ensures role separation between recovery and operational administration — a key CyberArk security control per the *Digital Vault Installation Guide v12*.
+Think of this phase as laying the foundation of a secure fortress. The steps that follow—component setup, Active Directory integration, and DR replication—all rely on the integrity and configuration of this core Vault.
 
 ---
 
-### Step 2: Vault Hardening
+### Step 1: Creating the Built-In Accounts (Master & Administrator)
 
-Once credentials are defined, the setup automatically executes **machine hardening** — disabling unnecessary services, enforcing local security policies, and applying strict OS lockdown rules.
+The installation starts with defining two critical built-in accounts: **Master** and **Administrator**.
 
-> **Figure 2.** Automatic hardening in progress
-> ![Vault hardening](./screenshots/cyber-setup-hardening.png)
+* **Master** is the break-glass recovery account—used only in emergencies or Vault restoration scenarios.
+* **Administrator** manages daily Vault operations and system configuration.
 
-This aligns with CyberArk’s hardening baseline, which ensures that the Vault OS complies with PAM best practices (restrictive firewall rules, disabled SMB shares, minimal services).
-The installer configures these settings automatically to meet the *CyberArk Vault Security Standard*.
+These accounts enforce role separation—one of CyberArk’s core security principles. Between these two, the Vault maintains both recoverability and operational stability.
 
----
+> **Figure 1.** Creating the built-in Master and Administrator accounts
+> 📸 *Paste screenshot here:* `./screenshots/built-in-user-config.png`
 
-### Step 3: Vault Initialization and Internal Safes
-
-After installation, I logged into the Vault interface to confirm system creation of the core safes:
-
-* **System** – stores internal configuration data.
-* **VaultInternal** – manages operational metadata.
-* **Notification Engine** – handles event notifications and triggers.
-
-> **Figure 3.** Vault internal safes visible post-installation
-> ![Vault safes](./screenshots/vault-setup-full-complete.png)
-
-The presence of these safes confirms a successful initialization and readiness for component registration (PVWA, CPM, and PSM).
+Once these credentials were set, the Vault generated its initial encryption keys and prepared the machine for hardening. At this stage, no external components (PVWA, CPM, or PSM) can connect yet—the Vault first secures its environment.
 
 ---
 
-### Step 4: Service Validation
+### Step 2: Automatic Hardening
 
-Using **Server Central Administration**, I validated that Vault services were up and connected securely to the database. The log entries show:
+After account creation, CyberArk’s **Automatic Hardening** begins. This is where the Vault differentiates itself from a typical Windows server—it transforms into a locked-down security appliance.
 
-* Successful encryption algorithm activation (AES 256-bit, RSA 2048-bit, SHA-512).
-* Firewall confirmed open for client communication.
-* Vault engine version 12.0.0.33 running.
+During this process, the installer:
 
-> **Figure 4.** Vault services operational with encryption and communication logs
-> ![Vault service log](./screenshots/cyberArk-server-up.png)
+* Disables unnecessary Windows services and shares.
+* Applies restrictive NTFS permissions.
+* Configures a dedicated Windows firewall profile.
+* Sets system-level policies that align with CyberArk’s *Digital Vault Security Standard.*
 
-This log output verifies the Vault’s cryptographic posture and service integrity, ensuring encrypted credential storage and controlled client communication.
+This is one of my favorite steps—it’s where you can literally watch the system secure itself.
+
+> **Figure 2.** Hardening in progress — CyberArk securing the operating system
+> 📸 *Paste screenshot here:* `./screenshots/cyber-setup-hardening.png`
+
+When the hardening completes, the Vault machine is effectively isolated and production-grade secure.
+
+---
+
+### Step 3: Vault Initialization & Core Safes
+
+Once installation and hardening were complete, the Vault initialized its **core safes**, the internal repositories that make up its database.
+
+These include:
+
+* `System` — internal configuration and maintenance data.
+* `VaultInternal` — operational metadata and log indexes.
+* `Notification Engine` — event-driven alerting mechanisms.
+
+At this stage, the Vault is fully operational—ready to accept connections from other CyberArk components.
+
+> **Figure 3.** Vault safes confirmed post-installation
+> 📸 *Paste screenshot here:* `./screenshots/vault-setup-full-complete.png`
+
+For anyone new to CyberArk, seeing these safes appear is confirmation that your Vault is alive, healthy, and successfully encrypted.
+
+---
+
+### Step 4: Validating Vault Services
+
+Before moving on, I validated the Vault’s services through **Server Central Administration (SCA)**. This step ensures all necessary services—Vault, PrivateArk Server, and communication listeners—are active and using the correct encryption algorithms (AES-256, RSA-2048, SHA-512).
+
+> **Figure 4.** Vault services running and communication logs active
+> 📸 *Paste screenshot here:* `./screenshots/cyberArk-server-up.png`
+
+The SCA log output showed successful startup, database mount confirmation, and secure socket binding—all key indicators of a stable Vault installation.
 
 ---
 
 ### Step 5: Network Isolation and IPv4 Configuration
 
-For least-privilege network exposure, the Vault host was configured with **IPv4-only connectivity** and unnecessary protocols disabled.
+With the Vault now operational, I tightened its network configuration. Following CyberArk best practices, I disabled **IPv6** and unnecessary discovery protocols to minimize exposure.
 
-* Link-Layer Topology Discovery was unchecked.
-* Only IPv4 is active, reducing the attack surface and simplifying firewall rule management.
+This ensures the Vault operates as a **“bubble system”**—reachable only from explicitly defined servers like PVWA or CPM, and invisible to everything else.
 
-> **Figure 5.** IPv4-only configuration on the Vault NIC
-> ![IPv4 configuration](./screenshots/Ip-config-v4.png)
+> **Figure 5.** IPv4-only configuration and host isolation
+> 📸 *Paste screenshot here:* `./screenshots/Ip-config-v4.png`
 
-This confirms compliance with CyberArk’s “Vault-in-a-bubble” design principle — isolating the Vault from general network visibility.
+Restricting the Vault to IPv4 simplifies firewall rule management and aligns with real-world enterprise hardening standards.
 
 ---
 
 ### Key Takeaways
 
-✅ **Security-first mindset:** Implemented hardened installation with minimal OS footprint and isolation.
-✅ **Technical depth:** Understood and executed proper role separation (Master vs Administrator).
-✅ **Operational validation:** Verified encryption, services, and Vault health using official administrative tools.
-✅ **Readiness for scale:** Environment prepped for component registration and future DR replication.
+💡 **Security-first design:** Implemented CyberArk’s built-in hardening and network isolation principles for maximum protection.
+💡 **Clarity of architecture:** Demonstrated understanding of how the Vault acts as the root of trust for all downstream PAM components.
+💡 **Operational validation:** Verified encryption, core safes, and service health using administrative tools.
+💡 **Production mindset:** Built and validated this environment with real-world deployment rigor.
 
 ---
-
-Would you like me to continue with this exact structure and tone for **Phase 2 – PVWA** next?
 
 
 <img width="750" height="750" alt="built-in-user-config" src="https://github.com/user-attachments/assets/7e8bfa5e-1b72-4ec7-8a39-fd67c352da85" />**Vault Built in User** 
