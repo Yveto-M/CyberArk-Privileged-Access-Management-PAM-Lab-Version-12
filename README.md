@@ -1,0 +1,2 @@
+# CyberArk-Privileged-Access-Management-PAM-Lab-Version-12
+This project demonstrates a full end-to-end deployment of CyberArk PAM version 12 in a virtualized  environment.  The goal was to simulate a real enterprise privileged-access ecosystem—from secure vaulting of credentials to session isolation and disaster recovery—using best practices aligned with **Zero Trust** and **least privilege** principles.
