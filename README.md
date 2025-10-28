@@ -530,6 +530,140 @@ This configuration demonstrates a complete **end-to-end CyberArk Privileged Acce
 
 ---
 
+---
+
+## Phase 5 — Disaster Recovery (DR) Vault Configuration & Replication
+
+### Overview
+
+The **DR Vault** keeps your CyberArk environment resilient. It continuously replicates the Primary Vault so, if the primary goes down, privileged data and access can continue with minimal disruption. In this lab, the **Primary Vault** runs at `10.1.1.1` and the **DR Vault** at `10.1.1.5`. Replication is handled by **PADR** using a dedicated replication user.
+
+---
+
+### Step 1: Install and Harden the DR Vault
+
+I deployed a fresh Windows Server for the DR Vault, ran the Vault installer, and let the automatic hardening lock down the OS and services—same baseline hardening you saw on the primary.
+
+> **Figure 1.** Launching the DR Vault setup (standalone)
+> 📸 <img width="539" height="417" alt="DR-vault-ini-setup-1" src="https://github.com/user-attachments/assets/82e2dd27-45a8-4a94-ac34-c005bd82e472" />
+
+> **Figure 2.** Pointing to the Operator media (Recovery/Server keys)
+> 📸 <img width="743" height="530" alt="OP-cd-path-2" src="https://github.com/user-attachments/assets/a5e252ba-b873-4b89-8888-91e746a1b78f" />
+
+> **Figure 3.** DR Vault machine hardening in progress
+> 📸 <img width="532" height="424" alt="ini-vault-hardening-3" src="https://github.com/user-attachments/assets/7bc3aeb0-9b05-4442-a35c-171cad7b1c4a" />
+
+> **Figure 4.** Setting built-in accounts (Master / Administrator)
+> 📸 <img width="750" height="536" alt="dr-vault-pass-recovery-4" src="https://github.com/user-attachments/assets/be9c3f49-955e-4539-b321-dcfac45ab534" />
+
+> **Figure 5.** Post-install: PrivateArk Server service present and running
+> 📸 <img width="845" height="199" alt="dr-vault-manual-prior-to-services-set-up-5" src="https://github.com/user-attachments/assets/1978d2fd-6575-4705-8a53-6cd179f3b2b7" />
+
+---
+
+### Step 2: Create a Replication User on the Primary Vault
+
+Replication uses a least-privilege **DR user** on the Primary Vault with backup/restore rights across safes.
+
+> **Figure 6.** Creating the `DR_2` user (System → Backup Users)
+> 📸 <img width="567" height="430" alt="new-user-to-install-DR-vault-to-production-vault-18-" src="https://github.com/user-attachments/assets/44e976aa-33d5-449d-a6ac-668c3920a2cb" />
+
+> **Figure 7.** Assigning permissions (Backup All Safes / Restore All Safes)
+> 📸 <img width="562" height="505" alt="DR_2-access-priviledges-19" src="https://github.com/user-attachments/assets/a46ad303-07f3-4c11-ba78-9d73b981e511" />
+
+> **Figure 8.** Setting password / auth details for the replication user
+> 📸 <img width="571" height="508" alt="dr-user-set-password-for-dr-admin-setup-7" src="https://github.com/user-attachments/assets/f6436375-e235-4653-adca-d813dac322dd" />
+
+> **Figure 9.** (Optional) Additional DR user created for operational separation
+> 📸 <img width="536" height="402" alt="Dr-vault-user2-DR-set-up-in-main-vault-20" src="https://github.com/user-attachments/assets/d554f553-1d6b-4294-8a4c-bd8beac4f88c" />
+
+---
+
+### Step 3: Install the DR Component and Link to Primary
+
+On the DR host, I installed the **Disaster Recovery** component, pointed it to the Primary Vault, and authenticated with the DR user.
+
+> **Figure 10.** Starting the DR component setup on the DR Vault
+> 📸 <img width="520" height="408" alt="DR-ini-set-up-6" src="https://github.com/user-attachments/assets/3178255a-1fd8-4d79-a41e-68f9dbeee7de" />
+
+> **Figure 11.** Supplying `DR_2` credentials for replication
+> 📸 <img width="543" height="398" alt="dr-user-replicate-pass-set-up-8" src="https://github.com/user-attachments/assets/829fe90a-0015-4ebd-ac6f-aaea66c3a6bd" />
+
+> **Figure 12.** (Alt view) DR component connect parameters on the DR Vault
+> 📸 <img width="544" height="412" alt="dr-set-up-replication-in-drVault-9" src="https://github.com/user-attachments/assets/c6fffe8c-367a-4d34-966e-2b05fe1e2cf4" />
+
+
+> **Figure 13.** Primary Vault address/port (pointing to `10.1.1.1:1858`)
+> 📸 <img width="546" height="415" alt="dr-to-og-vault-address-10" src="https://github.com/user-attachments/assets/662e84d4-6a64-4cfe-9e38-adfdce327a9d" />
+
+
+> **Figure 14.** Install success confirmation (services registered)
+> 📸 <img width="1024" height="227" alt="proof-of-dr-installment-11" src="https://github.com/user-attachments/assets/952f0608-21bd-494f-a56e-dc4f9257e3f4" />
+
+---
+
+### Step 4: Configure PADR & Dual-Vault Addressing
+
+With DR installed, I enabled replication/failover in **padr.ini** and ensured **Vault.ini** lists both Vault IPs.
+
+> **Figure 15.** Editing PADR settings (enable replicate/failover/dbsync)
+> 📸 <img width="523" height="396" alt="ark-client-set-up-DRvault-15" src="https://github.com/user-attachments/assets/762e6349-76fe-4349-98c2-93aeb60531c7" />
+
+
+> **Figure 16.** Confirming dual Vault entries and port in `Vault.ini`
+> 📸 <img width="524" height="401" alt="user2-port-dr-vault-config-21" src="https://github.com/user-attachments/assets/c26ca681-fd08-4857-b167-731372842ed1" />
+
+> **Figure 17.** PrivateArk Client: both Vault and DR Vault visible/linked
+> 📸 <img width="1032" height="303" alt="create-DR-server-inside-main-vault-17" src="https://github.com/user-attachments/assets/afad960a-f5e3-46fc-ae80-e12fa99a19cf" />
+
+
+> **Figure 18.** (Ops hygiene) Pausing CPM services before a full backup
+> 📸 <img width="722" height="116" alt="stop-cpm-services-prior-tofull-dr-backup-14" src="https://github.com/user-attachments/assets/6122d4b5-2ca9-448a-aafd-843e3e51ffef" />
+
+---
+
+### Step 5: Run & Validate Replication
+
+I kicked off replication and watched PADR logs transition from **first full sync** to **incremental** runs. The safes (e.g., Vetolabs, PSM) appeared on the DR side.
+
+> **Figure 19.** Initial replication in progress (PADR)
+> 📸 <img width="758" height="238" alt="proof-of-replication-in-progress-12" src="https://github.com/user-attachments/assets/139ad302-d19c-4311-bb18-e7bdb1afce37" />
+
+
+> **Figure 20.** Manually forcing a new full replication (reset technique)
+> 📸 <img width="803" height="364" alt="delete-last-2-lines-to-trigger-full-replication-23" src="https://github.com/user-attachments/assets/c9799f39-591b-4192-8a89-f092843a8a8c" />
+
+> **Figure 21.** Full replication complete → switching to incrementals
+> 📸 <img width="735" height="445" alt="proof-of-full-replication-now-followed-by-incremental-reps-24" src="https://github.com/user-attachments/assets/5887a99f-3be1-4462-a2f3-9a8bb95a1fd5" />
+
+> **Figure 22.** Backup/replication success confirmation
+> 📸 <img width="810" height="496" alt="Successful-dr-to-vault-back-up-22" src="https://github.com/user-attachments/assets/611490c3-027a-43f8-8ddc-832c407f4c0d" />
+
+> **Figure 23.** Proof: safe data replicated (incl. PSM/Session safes)
+> 📸 <img width="1024" height="227" alt="proof-of-dr-installment-11" src="https://github.com/user-attachments/assets/043682ce-b5c6-4186-9a33-5fffab2efd15" />
+
+> **Figure 24.** Copying DR backup artifacts to an offline safe location
+> 📸 <img width="1013" height="235" alt="copy-DR-files-folder-to-personal vault-vetolabs-16" src="https://github.com/user-attachments/assets/b63a17d9-12c5-42df-a748-6ac2e38f2839" />
+
+---
+
+### Step 6: Connectivity During Primary Outage (PVWA/PSM)
+
+I validated that, in a **primary outage**, PVWA/PSM would communicate against the DR Vault endpoint as designed (CPM remains intentionally tied to the primary in many designs to avoid split-brain rotations).
+
+> **Figure 25.** PVWA/PSM communication path aligned for DR condition
+> 📸 <img width="763" height="225" alt="drvault-to-pvwa-communication-incase-of-mainvault-fail-same for psm but not for cpm-13" src="https://github.com/user-attachments/assets/55dadab8-ad08-46ec-8f99-675321bd61bc" />
+
+---
+
+### Key Takeaways
+
+✅ **Resilience proven:** DR Vault installed, hardened, and linked to the primary with PADR.
+✅ **Clean replication cycles:** Full → incremental replication verified in logs and safes.
+✅ **Operational discipline:** DR user with scoped permissions; CPM paused before backup; artifacts preserved.
+✅ **Failover awareness:** PVWA/PSM flow validated for DR scenarios.
+
+---
 
 ## 🧰 Tools & Technologies
 
@@ -552,5 +686,3 @@ This configuration demonstrates a complete **end-to-end CyberArk Privileged Acce
 
 ---
 
-
----
