@@ -385,7 +385,6 @@ In the Vault, I confirmed the creation of new CPM safes (cpm-old versions, PassM
 > **Figure 15.** Updated Vault safes list reflecting CPM registration
 > 📸 <img width="1021" height="352" alt="cpm-complete" src="https://github.com/user-attachments/assets/7a627ed5-bcc6-4f67-9eae-0d09d4031d1e" />
 
-
 ---
 
 ### Key Takeaways
@@ -497,39 +496,7 @@ Finally, system health in PVWA confirmed **1 connected PSM instance**, verifying
 
 ---
 
-## **CyberArk v12 Architecture Overview**
-
-Below is a text-based layout summarizing the entire build:
-
-```
-[Primary Vault Server]  (10.1.1.1)
-│
-├── [PVWA + CPM Server]  (10.1.1.2)
-│     ├─ Hosts Password Vault Web Access (HTTPS)
-│     ├─ Runs Central Policy Manager for credential rotation
-│     └─ Integrated with the Vault via port 1858
-│
-├── [Active Directory Domain Controller]  (10.1.1.X)
-│     └─ Domain: ArkLabs.com – manages domain users, DNS, Kerberos
-│
-├── [PSM Server]  (10.1.1.3)
-│     ├─ Joined to ArkLabs.com
-│     ├─ Connected to PVWA API Gateway via HTTPS (port 443)
-│     ├─ Handles RDP/SSH session isolation
-│     └─ Reports health to PVWA dashboard
-│
-└── [Disaster Recovery Vault]  (to be configured next)
-      └─ Replicates Vault data for high availability and business continuity
-```
-
-This configuration demonstrates a complete **end-to-end CyberArk Privileged Access Security ecosystem** deployed in a controlled lab environment—each component secured, networked, and validated through TLS communication and domain integration.
-
----
-
 ✅ **Next Phase:** *Disaster Recovery Vault Configuration & Synchronization* — to establish data redundancy between the Production Vault and the DR site.
-
----
-
 ---
 
 ## Phase 5 — Disaster Recovery (DR) Vault Configuration & Replication
@@ -663,6 +630,33 @@ I validated that, in a **primary outage**, PVWA/PSM would communicate against th
 ✅ **Operational discipline:** DR user with scoped permissions; CPM paused before backup; artifacts preserved.
 ✅ **Failover awareness:** PVWA/PSM flow validated for DR scenarios.
 
+
+## **CyberArk v12 Architecture Overview**
+
+Below is a text-based layout summarizing the entire build:
+
+```
+[Primary Vault Server]  (10.1.1.1)
+│
+├── [PVWA + CPM Server]  (10.1.1.2)
+│     ├─ Hosts Password Vault Web Access (HTTPS)
+│     ├─ Runs Central Policy Manager for credential rotation
+│     └─ Integrated with the Vault via port 1858
+│
+├── [Active Directory Domain Controller]  (10.1.1.X)
+│     └─ Domain: ArkLabs.com – manages domain users, DNS, Kerberos
+│
+├── [PSM Server]  (10.1.1.3)
+│     ├─ Joined to ArkLabs.com
+│     ├─ Connected to PVWA API Gateway via HTTPS (port 443)
+│     ├─ Handles RDP/SSH session isolation
+│     └─ Reports health to PVWA dashboard
+│
+└── [Disaster Recovery Vault]  (to be configured next)
+      └─ Replicates Vault data for high availability and business continuity
+```
+
+This configuration demonstrates a complete **end-to-end CyberArk Privileged Access Security ecosystem** deployed in a controlled lab environment—each component secured, networked, and validated through TLS communication and domain integration.
 ---
 
 ## 🧰 Tools & Technologies
